@@ -16,7 +16,6 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 
 fun main() = application {
-    System.setProperty("compose.interop.blending", "true")
 //    System.setProperty("skiko.vsync.enabled", "false")
 
     Window(
