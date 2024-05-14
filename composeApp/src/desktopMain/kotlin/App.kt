@@ -1,10 +1,14 @@
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -31,6 +36,7 @@ fun App() {
     var lastEventTime = remember { 0L }
 
     var useWithFrameMillis by remember { mutableStateOf(false) }
+    var updateOnEachDragEvent by remember { mutableStateOf(false) }
 
     LaunchedEffect(useWithFrameMillis) {
         if (useWithFrameMillis) {
@@ -58,7 +64,7 @@ fun App() {
 
                             val diff = change.uptimeMillis - lastEventTime
 
-                            if (diff > 20) {
+                            if (diff > 20 || updateOnEachDragEvent) {
                                 update++
                                 lastEventTime = change.uptimeMillis
                             }
@@ -86,7 +92,10 @@ fun App() {
         }
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
         ) {
             Checkbox(
                 checked = useWithFrameMillis,
@@ -95,6 +104,17 @@ fun App() {
 
             Text(
                 text = "useWithFrameMillis: $useWithFrameMillis"
+            )
+
+            VerticalDivider()
+
+            Checkbox(
+                checked = updateOnEachDragEvent,
+                onCheckedChange = { updateOnEachDragEvent = it },
+            )
+
+            Text(
+                text = "update on each drag event: $updateOnEachDragEvent"
             )
         }
     }
